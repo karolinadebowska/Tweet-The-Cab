@@ -1,0 +1,22 @@
+<%= erb :header %>
+
+        <h2>CUSTOMER FEEDBACK</h2>
+        <table>
+            <tr>
+                <th>No</th>
+                <th>From</th>
+                <th>Subject</th>
+                <th>Feedback</th>
+            </tr>
+            <%@feedback.each do |feedback|%>
+            <tr>
+                <td><%=h feedback[0]%></td>
+                <td><%=h feedback[1]%></td>
+                <td><%=h feedback[2]%></td>
+                <td><%=h feedback[3]%></td>
+            </tr>
+            <%end%>
+
+        </table>
+
+<%= erb :footer %>

@@ -1,0 +1,35 @@
+<%= erb :header %>
+
+        <div>
+          <h2><a href="transcriber">BACK TO TWEETS</a></h2>
+            <table style="table-layout:auto;width:95%;">
+                <tr>
+                  <th>User Handle</th>
+                  <th>Tweet</th>
+                </tr>
+                <tr>
+                  <td><%=h @tweet[1]%></td>
+                  <td><%=h @tweet[2]%></td>
+                </tr>
+            </table>
+            <h2>Auto-Response</h2>
+            <form method="post" action="respond" class="response-form">
+                <select name="type">
+                    <option value="confirm">Your request is being processed</option>
+                    <option value="deny">You request could not be understood</option>
+                </select>
+                <input type="hidden" name="handle" value="<%=@tweet[1]%>">
+                <input type="hidden" name="targetTweet" value="<%=@tweet[4]%>">
+                <input type="submit" value="Send Response">
+            </form>
+            <h2>Custom Response</h2>
+            <form method="post" action="respond" class="response-form">
+                <input type="text" name="message" placeholder="Enter message..." required>
+                <input type="hidden" name="handle" value="<%=@tweet[1]%>">
+                <input type="hidden" name="targetTweet" value="<%=@tweet[4]%>">
+                <input type="hidden" name="type" value="custom">
+                <input type="submit" value="Send Response">
+            </form>
+        </div>
+
+<%= erb :footer %>

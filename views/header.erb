@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="style/styles.css" type="text/css"\>
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<meta charset="utf-8">
+	<title>Tweet-a-Cab</title>
+</head>
+<body>
+	<div class="container">
+		<header>
+			<img src="images/logo.png" class="logo" \>
+            <% if session[:logged_in] %>
+                <div class="signedin">
+                    <p><b><%= session[:username] %></b></p>
+                    <div class="account-dropdown">
+                        <a class="account-a" href='/user'>CUSTOMER ACCOUNT</a>
+                        <br>
+                        <%if @permission["driver"]%>
+                        <a class="account-a" href="/driverhistory">FINISHED JOURNEYS</a>
+                        <br>
+                        <%end%>
+                        <a class="account-a" href='/signout'>LOG OUT</a>
+                    </div>  
+                </div>
+            <%else%>
+                <div class="signin">
+                <a href="/signin">
+                    <img src="images/sign-in-with-twitter-gray.png"\>
+                </a>
+                </div>
+            <% end %>
+		</header>
+		<nav>
+			<div  class="navbar" id="navbar">
+                <center>
+                    <a href="/">HOME</a>
+                    <%if @permission["driver"]%>
+                        <a href="driver">DRIVER</a>
+                    <%end%>
+                    <% if @permission["user"] && !@permission["transcriber"] %>
+                         <a href="feedback">FEEDBACK</a>
+                    <%end%>
+                    <%if @permission["transcriber"]%>
+                        <a href="transcriber">TRANSCRIBER</a>
+                        <a href="displayfeedback">OPINIONS</a>
+                    <%end%>
+                    <%if !@permission["transcriber"]%>
+                        <a href="cars">THE CARS</a>
+                    <%end%>
+                    <div class="hamburger" onclick="toggle(this)">
+                        <script src="hamburger.js"></script>
+                        <div class="bun1"></div>
+                        <div class="patty"></div>
+                        <div class="bun2"></div>
+                    </div>
+                </center>
+			</div> 
+		</nav>
+	<main>

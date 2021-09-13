@@ -1,0 +1,62 @@
+<%= erb :header %>
+
+  <h1>Current Database Contents</h1>
+  <table>
+  <tr>
+    <td>active</td>
+    <td>car_id</td>
+    <td>driver_id</td>
+    <td>firstname</td>
+    <td>surname</td>
+    <td>phone</td>
+    <td>twitter</td>
+  </tr>
+  <% @drivers.each do |d|  %>
+  <tr>
+    <td><%=h d[0]%></td>
+    <td><%=h d[1]%></td>
+    <td><%=h d[2]%></td>
+    <td><%=h d[3]%></td>
+    <td><%=h d[4]%></td>
+    <td><%=h d[5]%></td>
+    <td><%=h d[6]%></td>
+  </tr>
+  <% end %>
+  </table>
+  <table>
+  <tr>
+    <td>tweet_id</td>
+    <td>twitter</td>
+    <td>message</td>
+    <td>city</td>
+  </tr>
+  <% @tweets.each do |d|  %>
+  <tr>
+    <td><%=h d[0]%></td>
+    <td><%=h d[1]%></td>
+    <td><%=h d[2]%></td>
+    <td><%=h d%></td>
+  </tr>
+  <% end %>
+  </table>
+  <table>
+  <tr>
+    <td>journey_id</td>
+    <td>twitter</td>
+    <td>message</td>
+    <td></td>
+  </tr>
+  <% @journeys.each do |d|  %>
+  <tr>
+    <td><%=h d[0]%></td>
+    <td><%=h d[1]%></td>
+    <td><%=h d[2]%></td>
+    <td><%=h d[3]%></td>
+    <td><%=h d[4]%></td>
+    <td><%=h d[5]%></td>
+    <td><%=h d[6]%></td>
+    <td><%=h d[7]%></td>
+  </tr>
+  <% end %>
+  </table>
+<%= erb :footer %>

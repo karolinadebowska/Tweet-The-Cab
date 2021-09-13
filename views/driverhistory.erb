@@ -1,0 +1,34 @@
+<%= erb :header %>
+
+        <div>
+            <h2>ALL FINISHED JOURNEYS</h2>
+            <!--the info from the database-->
+            <table id="driverTable">
+            <tr>
+                <th>CUSTOMER</th>
+                <th>PICK UP LOCATION</th>
+                <th>DROP OFF LOCATION</th>
+                <th>COMMENT</th>
+                <th>PICK UP TIME</th>
+                <th>DROP OFF TIME</th>
+            </tr>
+            <% @journeys.each do |j|  %>
+                <tr>
+                  <td>Id: <%=j[1]%></td>
+                  <td><%=j[3]%></td>
+                  <td><%=j[4]%></td>
+                  <% if j[9].nil?%>
+                    <td>---</td>
+                  <%else%>
+                    <td ><%=j[9]%></td>
+                  <%end%>
+                  <td><%=j[5]%></td>
+                  <td><%=j[6]%></td>
+                </tr>
+            <% end %>
+            </table> 
+        </div>
+
+<%= erb :footer %>
+
+ 

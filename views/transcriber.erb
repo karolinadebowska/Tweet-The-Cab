@@ -1,0 +1,37 @@
+<%= erb :header %>
+
+        <div>
+            <h2>TWEETS</h2>
+            <table class="transcriber-table">
+                <tr>
+                    <th>User Handle</th>
+                    <th>Tweet</th>
+                    <th>Action</th>
+                    <th>Status</th>
+                </tr>
+                <% @tweets.each do |d|  %>
+                    <tr>
+                        <td><%=h d[1]%></td>
+                        <td><%=h d[2]%></td>
+                        <td>
+                            <center>
+                              <form method="get" action="respond" class="button">
+                                  <input type="hidden" name="tweet" value="<%=d[0]%>">
+                                  <input type="submit" value="Respond" class="tableButton">
+                              </form>
+                              <form method="get" action="allocate" class="button">
+                                  <input type="hidden" name="tweet" value="<%=d[0]%>">
+                                  <input type="submit" value="Assign Driver" class="tableButton">
+                              </form>
+                            </center>
+                        </td>
+                        <td><%=d[d.size-1]%></td>
+                    </tr> 
+                <% end %>
+            </table> 
+        </div>
+        <div>
+            <a class="add-driver-button" href="add"><b>ADD DRIVERS</b></a>
+        </div>
+
+<%= erb :footer %>

@@ -1,0 +1,192 @@
+<%= erb :header %>
+
+        <div>
+            <%puts @driver[0]%>
+            <%if @driver[0]==1%>
+            <h2>You are currently active</h2>
+            <form action="/driver/activate" method="post">
+                <input type="hidden" name="active" value=0>
+                <input type="hidden" name="driverid" value="<%=@driver[2]%>">
+                <input type="submit" id ="deactivate" value="Deactivate">
+            </form>
+            <%else%>
+            <h2>You are currently inactive</h2>
+            <form action="/driver/activate" method="post">
+                <input type="hidden" name="active" value=1>
+                <input type="hidden" name="driverid" value="<%=@driver[2]%>">
+                <input type="submit" id ="activate" value="Activate">
+            </form>
+            <%end%>
+            <h2>CURRENT JOURNEYS</h2>
+            <table id="driverTable">
+            <tr>
+                <th>CUSTOMER</th>
+                <th>PICK UP LOCATION</th>
+                <th>DROP OFF LOCATION</th>
+                <th>COMMENT</th>
+                <th>PICK UP TIME</th>
+                <th>DROP OFF TIME</th>
+            </tr>
+            <% require './database/database'%>
+            <% database = Database.new%>
+            <% @journeys.each do |j|  %>
+               <!--display only these journeys that didn't finish yet-->
+               <% if j[6].nil?%>
+                   <input type="hidden" name="journeyId" id = "journeyId" value="<%=j[0]%>">
+                    <input type="hidden" name="driverId" value="<%=j[2]%>"> 
+                    <tr>
+                        <td>Id: <%=h j[1]%></td>
+                        <td><%=h j[3]%></td>
+                        <td><%=h j[4]%></td>
+                        <% if j[9].nil?%>
+                            <td>---</td>
+                        <%else%>
+                            <td ><%=h j[9]%></td>
+                        <%end%>
+                        <td><button name="buttonStart" id="buttonStart">START<br></button></td>
+                        <td><button name="buttonFinish" id="buttonFinish">FINISH<br></button></td>
+                    </tr>
+                <%end%>
+            <% end %>
+            </table> 
+        </div>
+        <div>
+            <h2>Edit Your Personal Info</h2>
+            <form action="" method="post">
+                <label for="fname">First Name</label>
+                <input type="text" id="fname" name="firstname" value="<%=h @driver[3]%>"  required>
+                <label for="lname">Last Name</label>
+                <input type="text" id="lname" name="lastname" value="<%=h @driver[4]%>"  required>
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone" value="<%=h @driver[5]%>" required>
+                <label for="city"><b>City</b></label>
+                <select name="city" required>
+                    <% if @driver[7] == "Sheffield"%>
+                        <option value="Sheffield">Sheffield</option>
+                        <option value="Birmingham">Birmingham</option>
+                    <%else%>
+                         <option value="Birmingham">Birmingham</option>
+                         <option value="Sheffield">Sheffield</option>
+                    <%end%>
+                </select>
+                <br>
+                <br>
+                <label for="lname">Car model</label>
+                <% car=database.getCarByID(@driver[1])[0]%>
+                <input type="text" id="cmodel" name="cmodel" value="<%=h car[2]%>" required>
+                <label for="lname">Car make</label>
+                <input type="text" id="cmake" name="cmake" value="<%=h car[1]%>" required>
+                <label for="lname">Licence Plate</label>
+                <input type="text" id="licence" name="licence" value="<%=h car[5]%>" required>
+                <div class="horizontal">
+                <label for="seats" >Number of seats</label>
+                <br>
+                <input type="radio" name="seats" required value="1">1
+                <input type="radio" name="seats" value="2" selected>2
+                <input type="radio" name="seats" value="3">3
+                <input type="radio" name="seats" value="4">4
+                <input type="radio" name="seats" value="5">5
+                </div>
+                <br>
+                <br>
+                <label for="lname">Colour</label>
+                <input type="text" id="colour" name="colour" value="<%=h car[3]%>" required>
+                <input type="submit" value="Update">
+                <input type="reset">
+            </form>
+        </div>
+
+    <script type="text/javascript">
+        //global variables
+        var clickedStop = false;
+        var clickedStart = false;
+        var buttonElement = document.getElementById('buttonStart');
+        var buttonElement2 = document.getElementById('buttonFinish');
+        
+          //functions
+          //get time when the button is clicked
+          function getTime(){
+                var currentDate = new Date();
+                var day = currentDate.getDate();
+                var month = currentDate.getMonth();
+                var year = currentDate.getFullYear();
+                var hour = currentDate.getHours(); 
+                var minutes = currentDate.getMinutes(); 
+                var seconds = currentDate.getSeconds(); 
+                //adjust the output
+                if (day<10)
+                     day = "0"+day;
+                if (month<10)
+                    month=month+1;
+                     month = "0"+month;
+                if (minutes<10)
+                    minutes = "0"+minutes;
+                if (seconds <10)
+                    second = seconds+"0";
+                var time = hour+":"+minutes+":"+seconds+" ";
+                var date =  year + "-" +month + "-" + day ;
+                var dateString = date+" "+time;
+             return dateString;   
+          }
+
+       //change color of a button
+       function changeColor(btn) {
+          btn.style.backgroundColor = "yellow";
+       }
+
+       function start() {
+           //start can be cliecked only once
+            if (clickedStart)
+                 return;
+            var time = document.createTextNode(getTime());
+            var sT = document.getElementById('buttonStart');
+            sT.appendChild(time); 
+            var id = document.getElementById('journeyId').value;
+              $.get('/update', { start: getTime, id: id},function (e){
+            })
+            changeColor(this);
+            clickedStart=true;
+            if (buttonElement2){
+                buttonElement2.removeEventListener('click',ban, false);
+                buttonElement2.addEventListener('click', stop, false);  
+            }
+        }
+
+        function stop(){
+            //stop can be clicked only once
+            if (clickedStop)
+                return;
+            var time = document.createTextNode(getTime());
+            var fT = document.getElementById('buttonFinish');
+            var id = document.getElementById('journeyId').value;
+            console.log(id);
+            fT.appendChild(time); 
+              $.get('/updatefinish', { stop: getTime, id: id },function (e){
+            })
+            changeColor(this);
+            thankYou(); 
+            setTimeout(deleteEntry,2000);
+            clickedStop=true; 
+        }
+
+        function deleteEntry(){
+             document.getElementById("driverTable").deleteRow(1);
+        }
+
+        function ban(){
+            window.alert("You can't finish a journey that haven't started yet");
+        }
+        function thankYou(){
+            window.alert("Thank you for a safe journey! We hope everything was ok. Have a good day! :)");
+        }
+        
+        //main program
+        if (buttonElement){
+                buttonElement.addEventListener('click', start, false);
+                buttonElement2.addEventListener('click', ban, false);
+        }
+    </script>
+        
+<%= erb :footer %>
+
+ 
